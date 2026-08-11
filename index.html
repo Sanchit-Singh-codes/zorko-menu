@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ZORKO - Brand of Food Lovers | Menu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --z-orange: #FF6B00;
+      --z-orange-light: #FF8C33;
+      --z-orange-dark: #CC5500;
+      --z-black: #0A0A0A;
+      --z-surface: #111111;
+      --z-card: #151515;
+      --z-border: #2A2A2A;
+      --z-text: #FFFFFF;
+      --z-muted: #999999;
+      --z-dim: #555555;
+      --z-green: #00C853;
+      --z-red: #FF1744;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: var(--z-black);
+      color: var(--z-text);
+      overflow-x: hidden;
+      line-height: 1.5;
+    }
+
+    .hero {
+      min-height: 50vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 60px 20px;
+      position: relative;
+      background: radial-gradient(ellipse 60% 40% at 50% 60%, rgba(255,107,0,0.06) 0%, transparent 70%);
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 18px;
+      border: 1px solid rgba(255,107,0,0.3);
+      border-radius: 100px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--z-orange-light);
+      margin-bottom: 20px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .hero-badge .dot {
+      width: 6px; height: 6px;
+      background: var(--z-orange);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .hero h1 {
+      font-size: clamp(56px, 12vw, 120px);
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -3px;
+      background: linear-gradient(135deg, var(--z-orange) 0%, var(--z-orange-light) 50%, #FFB347 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 12px;
+    }
+
+    .hero p {
+      font-size: 16px;
+      color: var(--z-muted);
+      font-weight: 300;
+      max-width: 400px;
+    }
+
+    .offer-bar {
+      background: linear-gradient(90deg, var(--z-orange), var(--z-orange-dark));
+      padding: 10px;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+    }
+
+    .menu-nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(10,10,10,0.95);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--z-border);
+      padding: 12px 20px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+
+    .menu-nav::-webkit-scrollbar { display: none; }
+
+    .nav-inner {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      min-width: max-content;
+    }
+
+    .nav-btn {
+      padding: 8px 18px;
+      background: transparent;
+      border: 1px solid var(--z-border);
+      border-radius: 100px;
+      color: var(--z-muted);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      font-family: inherit;
+      white-space: nowrap;
+    }
+
+    .nav-btn:hover {
+      border-color: var(--z-orange);
+      color: var(--z-orange-light);
+    }
+
+    .nav-btn.active {
+      background: var(--z-orange);
+      border-color: var(--z-orange);
+      color: white;
+    }
+
+    .menu-wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 20px 80px;
+    }
+
+    .cat-section {
+      margin-bottom: 48px;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.6s ease;
+    }
+
+    .cat-section.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .cat-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 24px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--z-orange);
+    }
+
+    .cat-header h2 {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--z-orange);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .cat-header .line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, var(--z-orange), transparent);
+    }
+
+    .cat-header .icon {
+      font-size: 24px;
+    }
+
+    .item-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .item-row:hover {
+      background: rgba(255,107,0,0.03);
+      padding-left: 12px;
+      padding-right: 12px;
+      margin: 0 -12px;
+      border-radius: 8px;
+    }
+
+    .item-row:hover::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 3px;
+      height: 60%;
+      background: var(--z-orange);
+      border-radius: 0 3px 3px 0;
+    }
+
+    .item-info { flex: 1; min-width: 0; }
+
+    .item-name {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--z-text);
+      margin-bottom: 3px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .item-desc {
+      font-size: 12px;
+      color: var(--z-dim);
+      line-height: 1.4;
+      max-width: 500px;
+    }
+
+    .item-price {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--z-orange);
+      white-space: nowrap;
+      text-align: right;
+      margin-left: 16px;
+    }
+
+    .item-price .extra {
+      display: block;
+      font-size: 11px;
+      color: var(--z-dim);
+      font-weight: 400;
+      margin-top: 2px;
+    }
+
+    .tag-inline {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 100px;
+      font-size: 9px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      vertical-align: middle;
+    }
+
+    .tag-b { background: rgba(255,107,0,0.15); color: var(--z-orange-light); border: 1px solid rgba(255,107,0,0.2); }
+    .tag-n { background: rgba(0,200,83,0.12); color: var(--z-green); border: 1px solid rgba(0,200,83,0.2); }
+    .tag-m { background: rgba(255,23,68,0.12); color: var(--z-red); border: 1px solid rgba(255,23,68,0.2); }
+    .tag-v { background: rgba(0,200,83,0.08); color: #4CAF50; border: 1px solid rgba(76,175,80,0.15); }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+    }
+
+    @media (max-width: 900px) {
+      .two-col { grid-template-columns: 1fr; gap: 0; }
+    }
+
+    .combo-section { margin-top: 60px; padding-top: 40px; border-top: 2px solid var(--z-border); }
+
+    .combo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    .combo-item {
+      background: var(--z-card);
+      border: 1px solid var(--z-border);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .combo-item:hover {
+      border-color: rgba(255,107,0,0.3);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    }
+
+    .combo-item .emoji { font-size: 32px; margin-bottom: 8px; }
+    .combo-item .title { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+    .combo-item .sub { font-size: 12px; color: var(--z-muted); margin-bottom: 8px; }
+    .combo-item .price { font-size: 24px; font-weight: 700; color: var(--z-orange); }
+    .combo-item .price span { font-size: 14px; color: var(--z-dim); }
+
+    .meal-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      max-width: 500px;
+      margin: 24px auto 0;
+    }
+
+    .meal-item {
+      background: var(--z-card);
+      border: 1px solid var(--z-border);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .meal-item .emoji { font-size: 28px; margin-bottom: 6px; }
+    .meal-item .title { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+    .meal-item .sub { font-size: 11px; color: var(--z-muted); margin-bottom: 6px; }
+    .meal-item .price { font-size: 22px; font-weight: 700; color: var(--z-orange); }
+
+    .footer {
+      text-align: center;
+      padding: 40px 20px;
+      border-top: 1px solid var(--z-border);
+    }
+
+    .footer h3 {
+      font-size: 32px;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--z-orange), var(--z-orange-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .footer p { color: var(--z-muted); font-size: 13px; margin-top: 4px; }
+
+    .addons {
+      text-align: center;
+      padding: 16px;
+      background: var(--z-card);
+      border: 1px solid var(--z-border);
+      border-radius: 12px;
+      margin: 32px auto;
+      max-width: 700px;
+      font-size: 13px;
+      color: var(--z-muted);
+    }
+
+    .addons strong { color: var(--z-orange); }
+  </style>
+</head>
+<body>
+
+<div class="offer-bar">Add Cheese Injector @ &#8377;30/- Only | Add Cheese Slice @ &#8377;15/- | Grill Any Burger @ &#8377;30/- Only</div>
+
+<section class="hero">
+  <div class="hero-badge"><span class="dot"></span> Brand of Food Lovers</div>
+  <h1>ZORKO</h1>
+  <p>Where every bite tells a story. Experience the ultimate fusion of flavors.</p>
+</section>
+
+<nav class="menu-nav">
+  <div class="nav-inner">
+    <button class="nav-btn active" data-cat="all">All</button>
+    <button class="nav-btn" data-cat="burger">Burgers</button>
+    <button class="nav-btn" data-cat="pizza">Pizza</button>
+    <button class="nav-btn" data-cat="fries">Fries</button>
+    <button class="nav-btn" data-cat="wraps">Wraps</button>
+    <button class="nav-btn" data-cat="momos">Momos</button>
+    <button class="nav-btn" data-cat="kulhad">Kulhad</button>
+    <button class="nav-btn" data-cat="sandwich">Sandwiches</button>
+    <button class="nav-btn" data-cat="pasta">Pasta</button>
+    <button class="nav-btn" data-cat="garlic">Garlic Bread</button>
+    <button class="nav-btn" data-cat="buns">Buns</button>
+    <button class="nav-btn" data-cat="toastie">Toastie</button>
+    <button class="nav-btn" data-cat="nachos">Nachos</button>
+    <button class="nav-btn" data-cat="maggi">Maggi</button>
+    <button class="nav-btn" data-cat="coffee">Cold Coffee</button>
+    <button class="nav-btn" data-cat="chilla">Chilla & Rolls</button>
+    <button class="nav-btn" data-cat="bowl">Bowls</button>
+    <button class="nav-btn" data-cat="noodles">Noodles</button>
+    <button class="nav-btn" data-cat="mojito">Mojito</button>
+    <button class="nav-btn" data-cat="shakes">Shakes</button>
+    <button class="nav-btn" data-cat="icetea">Ice Tea</button>
+    <button class="nav-btn" data-cat="hot">Hot</button>
+    <button class="nav-btn" data-cat="dessert">Desserts</button>
+    <button class="nav-btn" data-cat="combo">Combos</button>
+  </div>
+</nav>
+
+<div class="menu-wrap" id="menuContent"></div>
+
+<div class="addons">
+  <strong>Add Cheese (25 gm)</strong> @ &#8377;30/- Only &nbsp;|&nbsp; <strong>Add Butter (10 gm)</strong> @ &#8377;10/- Only
+</div>
+
+<footer class="footer">
+  <h3>ZORKO</h3>
+  <p>Brand of Food Lovers</p>
+</footer>
+
+<script>
+const categories = {
+  burger: { icon: '&#127828;', name: 'Burgers', items: [
+    { n: 'Mexican King Burger', p: '129', e: '+15', d: 'The Ultimate Burger With Mexican Twist & ZORKO Special Sauce.', t: ['best'] },
+    { n: 'Spicy Salsa Barbeque Burger', p: '119', e: '+15', d: 'Burger With Veg Patty, Fresh Veggies, Spicy BBQ Salsa & ZORKO Special Sauce.', t: [] },
+    { n: 'Korean Burger', p: '99', e: '+15', d: 'Burger With Veg Patty, Fresh Veggies, ZORKO Special Sauce & Spicy Korean Sauce.', t: ['new'] },
+    { n: 'Double Tikki Burger', p: '119', e: '+15', d: 'Burger Elevated With Two Vegetable Patty With Veggies & Creamy Sauce.', t: [] },
+    { n: 'Classic OG Burger', p: '69', e: '+15', d: 'Burger Layered With Vegetable Patty & ZORKO Special Sauce.', t: [] },
+    { n: 'Royal Paneer Grilled Burger', p: '199', e: '+15', d: 'A delightful, flavorful & creamy Burger Layered With Freshly Grilled Paneer.', t: ['must'] },
+  ]},
+  pizza: { icon: '&#127829;', name: 'Pizza', items: [
+    { n: 'Veg Exotica Pizza', p: '229', e: '+40', d: 'A Feast Of Flavor With Onion, Capsicum, Tomato & ZORKO Special Sauce.', t: ['best'] },
+    { n: 'Paneer Barbeque Pizza', p: '279', e: '+40', d: 'A Fusion Of Paneer Tikka, Capsicum, Onion, Topped On The Pizza.', t: ['must'] },
+    { n: 'Hot To Hell Pizza', p: '219', e: '+40', d: 'Pizza Loaded With Spicy Sauce, Veggies, Punch Of Red Paprika And Mozzarella Cheese.', t: [] },
+    { n: 'Pizza Di Sicilia', p: '189', e: '+40', d: "World's Thinnest Pizza. Thin Crust Pizza With Exotic Veggies And Punch Of Red Paprika.", t: ['new'] },
+    { n: 'Margherita', p: '139', e: '+40', d: 'Classic Pizza Named After The Queen Margherita Of Savoy.', t: ['veg'] },
+    { n: 'The Xplod', p: '249', e: '+40', d: 'Stuffed Pizza Grilled With Cheese Sauce & Mozzarella Cheese.', t: [] },
+    { n: 'Golden Harvest Pizza', p: '159', e: '+40', d: 'Delicious Cheesy Twist On The Pizza Burst With Mozzarella.', t: ['new'] },
+    { n: 'Four Cheese Pizza', p: '249', e: '+40', d: 'The Ultimate In Cheese Delight With Cheddar, Orange Cheese, Mozzarella, Cheddar & Processed Cheese.', t: ['veg'] },
+    { n: 'Korean Pizza', p: '219', e: '+40', d: 'Pizza Topped With Korean Sauce, Jalapenos, Capsicum, Cheese & Fresh Veggies.', t: ['new'] },
+  ]},
+  fries: { icon: '&#127839;', name: 'Fries', items: [
+    { n: 'Peri Peri French Fries', p: '139', e: '+40', d: 'Crispy French Fries Tossed In Peri Peri Masala & Cheese Dip.', t: [] },
+    { n: 'Salted French Fries', p: '119', e: '+40', d: 'Classic Crispy French Fries Tossed With Salt.', t: [] },
+    { n: 'Korean Cheesy Fries', p: '219', e: '', d: 'Crispy French Fries Loaded With Korean Sauce For A Spicy, Cheesy Kick.', t: ['new'] },
+    { n: 'Sizzling Italian Fries', p: '229', e: '', d: 'Sizzling Fries Topped With Cheesy Sauce, ZORKO Special Sauce, Jalapenos, Paprika, Olives & Cheese.', t: ['must'] },
+  ]},
+  wraps: { icon: '&#129386;', name: 'Wraps', items: [
+    { n: 'Mexican Salsa Wrap', p: '189', e: '+30', d: 'Grilled Tortilla Rolled With Fresh Tomato Salsa, Exotic Veggies, Fresh Patty, Special Sauce & Crispy Nachos.', t: [] },
+    { n: 'Classic Veg Wrap', p: '159', e: '+30', d: 'Fresh Veggies, Paneer, Special ZORKO Sauce, Jalapenos & Red Paprika.', t: [] },
+    { n: 'Grilled Paneer Wrap', p: '219', e: '+30', d: 'Grilled Paneer With ZORKO Special Sauce, Crispy Veggies & Spices.', t: ['best'] },
+  ]},
+  momos: { icon: '&#129375;', name: 'Momos (6 pieces)', items: [
+    { n: 'Steam Momos', p: '129', e: '', d: 'Served With Schezwan Dip.', t: [] },
+    { n: 'Fried Momos', p: '129', e: '', d: 'Fried Momos Served With A Dip.', t: [] },
+    { n: 'Cheese Melting Gravy Momos', p: '229', e: '', d: 'A Delightful Fusion Of Traditional Tibetan Dumplings With Rich, Creamy Gravy Along With Special Seasoning.', t: ['best'] },
+  ]},
+  kulhad: { icon: '&#129379;', name: 'Kulhad', items: [
+    { n: 'Cheese Volcano Kulhad Momos', p: '219', e: '', d: 'Fried Momos Tossed In Special Creamy Sauce Stuffed In Kulhad.', t: [] },
+    { n: 'Cheese Loaded Kulhad Pizza', p: '219', e: '', d: 'Topped With Mozzarella Cheese, Capsicum, Onion, Corn & Loaded With Mozzarella Cheese In Kulhad.', t: ['must'] },
+    { n: 'Cheese Chatori Kulhad Maggi', p: '219', e: '', d: 'A Burst Of Cheeselicious Maggi Baked In A Kulhad Loaded With Mozzarella Cheese.', t: ['best'] },
+  ]},
+  sandwich: { icon: '&#129386;', name: 'Sandwiches', items: [
+    { n: 'Veg Mexican Sandwich', p: '199', e: '+30', d: 'A Blend Of Sauces & Vegetables Layered With Special Seasoned Bread.', t: [] },
+    { n: 'Paneer Maharaja Sandwich', p: '219', e: '+30', d: 'Sandwich Of Paneer With Veggies And Sauces.', t: [] },
+    { n: 'Veggie Mumbai Grilled Sandwich', p: '159', e: '+30', d: 'Grilled Sandwich With Fresh Veggies, Potato, Chutney.', t: [] },
+    { n: 'Cheese Chilli Sandwich', p: '189', e: '+30', d: 'Yummy & Spicy Grilled Sandwich Loaded With Capsicum, Chilli & Cheese.', t: ['best'] },
+  ]},
+  pasta: { icon: '&#127837;', name: 'Pasta', items: [
+    { n: 'Alfredo (White Sauce)', p: '199', e: '249', d: 'Pasta Tossed In Creamy White Sauce With Veggies.', t: ['veg'] },
+    { n: 'Arrabbiata (Red Sauce)', p: '199', e: '249', d: 'Pasta Tossed In Tomato Sauce Infused With Special Spices, Veggies With Punch Of Chilli Flakes.', t: ['veg'] },
+    { n: 'Ala Rosey (Pink Sauce)', p: '199', e: '249', d: 'Pasta Tossed In A Cocktail Sauce Which Is A Combination Of Tomato Sauce, Creamy White Sauce & Herbs.', t: ['best'] },
+    { n: 'Peri Peri Pasta', p: '199', e: '249', d: 'Penne Pasta Tossed In ZORKO Special Peri Peri Sauce Along With Golden Corn And Italian Herbs.', t: [] },
+  ]},
+  garlic: { icon: '&#127838;', name: 'Garlic Bread', items: [
+    { n: 'Cheese Garlic Bread', p: '129', e: '+30', d: 'Baked Bread With Creamy Garlic Butter & Mozzarella Cheese.', t: [] },
+    { n: 'Supreme Treat Garlic Bread', p: '149', e: '+30', d: 'Garlic Bread Loaded With Golden Corn, Jalapenos, Onion, Special Seasoning & Mozzarella Cheese.', t: [] },
+    { n: 'Paneer Tandoori Garlic Bread', p: '169', e: '+30', d: 'Crispy Garlic Bread Topped With Tandoori Paneer, Fresh Veggies & Mozzarella Cheese.', t: ['must'] },
+  ]},
+  buns: { icon: '&#127838;', name: 'Special Buns', items: [
+    { n: 'Cheese Pull & Tear Garlic Bun', p: '219', e: '', d: 'The Irresistible Bun Stuffed With Orange Cheese Sauce.', t: ['best'] },
+    { n: 'Korean Jalapeno Bun', p: '219', e: '', d: 'Loaded With Freshly Baked Bun Stuffed With Korean Sauce, Herbs, Mozzarella, Garlic Butter & Korean Sauce.', t: ['new'] },
+  ]},
+  toastie: { icon: '&#129386;', name: 'Toastie', items: [
+    { n: 'Korean Spicy Paneer', p: '129', e: '', d: 'Paneer And Veggies Marinated In Korean Sauce, Grilled On Toasted Bread.', t: ['new'] },
+    { n: 'Peri Peri Cheese Blast', p: '139', e: '', d: 'Peri Peri Spiced Cheese Sandwich With Orange Cheese Sauce And A Cheesy Topping.', t: ['must'] },
+    { n: 'Italian Treat', p: '119', e: '', d: 'ZORKO-Style Marinated Veggies On Toast, Covered With Cheesy Goodness.', t: ['veg'] },
+  ]},
+  nachos: { icon: '&#127839;', name: 'Nachos', items: [
+    { n: 'Cheesy Delight Nachos', p: '129', e: '', d: 'Crunchy Nachos Tossed With Cheese & ZORKO Special Sauce And Grated Cheese.', t: ['must'] },
+    { n: 'Nachos with Cheese Dip', p: '119', e: '', d: 'Crispy Nachos Chips Loaded With Special Creamy Dip.', t: [] },
+    { n: 'Nachos & Salsa', p: '219', e: '', d: 'Whip Up These Cheesy, Spicy Nachos For A Casual Get Together With Friends.', t: ['best'] },
+  ]},
+  maggi: { icon: '&#127837;', name: 'Maggi', items: [
+    { n: 'Veg Masala Maggi', p: '119', e: '', d: 'Maggi Prepared With Veggies And Maggi Masala.', t: [] },
+    { n: 'Hot Passion Spicy Maggi', p: '99', e: '', d: 'A Charismatic Maggi Prepared With Special Sauce & Veggies.', t: [] },
+    { n: 'Double Masala Maggi', p: '89', e: '', d: 'A Blend Of Finely Ground Spices, Herbs In Double Maggi Masala.', t: [] },
+    { n: 'Cheese Chatori Maggi', p: '139', e: '', d: 'A Fusion Maggi Prepared With Special Creamy Sauce & Veggies.', t: ['best'] },
+  ]},
+  coffee: { icon: '&#9749;', name: 'Cold Coffee', items: [
+    { n: 'Premium Cold Coffee', p: '69', e: '+25', d: '', t: ['best'] },
+    { n: 'Strong Cold Coffee', p: '89', e: '+25', d: '', t: [] },
+    { n: 'Chocolate Cold Coffee', p: '119', e: '+25', d: '', t: ['must'] },
+  ]},
+  chilla: { icon: '&#129375;', name: 'Chilla, Spring Roll', items: [
+    { n: 'Protein Power Chilla', p: '119', e: '', d: '', t: [] },
+    { n: 'Protein Power Chilla (With Paneer)', p: '129', e: '', d: '', t: [] },
+    { n: 'Veg Spring Roll (3 Pcs)', p: '119', e: '', d: '', t: [] },
+    { n: 'Veg Spring Roll (6 Pcs)', p: '169', e: '', d: '', t: [] },
+    { n: 'Grilled Spring Roll (3 Pcs)', p: '129', e: '', d: '', t: [] },
+    { n: 'Grilled Spring Roll (6 Pcs)', p: '189', e: '', d: '', t: [] },
+    { n: 'Paneer Spring Roll (3 Pcs)', p: '139', e: '', d: '', t: [] },
+    { n: 'Paneer Spring Roll (6 Pcs)', p: '249', e: '', d: '', t: [] },
+  ]},
+  bowl: { icon: '&#127835;', name: 'Bowl', items: [
+    { n: 'Fried Rice', p: '89 / 139', e: '', d: 'Half / Full', t: [] },
+    { n: 'Chilli Garlic Fried Rice', p: '99 / 159', e: '', d: 'Half / Full', t: [] },
+    { n: 'Schezwan Fried Rice', p: '119 / 169', e: '', d: 'Half / Full', t: [] },
+    { n: 'Manchurian With Fried Rice', p: '129 / 179', e: '', d: 'Half / Full', t: [] },
+    { n: 'Manchurian With Noodles', p: '129 / 169', e: '', d: 'Half / Full', t: [] },
+    { n: 'Paneer Fried Rice', p: '129 / 169', e: '', d: 'Half / Full', t: [] },
+    { n: 'Choco Peanut Butter Oatmeal Bowl', p: '139 / 219', e: '', d: 'Half / Full', t: [] },
+    { n: 'Exotic Fruits & Nuts Oatmeal Bowl', p: '159 / 229', e: '', d: 'Half / Full', t: [] },
+    { n: 'Cheese Paneer Tikka With Veggies Bowl', p: '159 / 229', e: '', d: 'Half / Full', t: [] },
+    { n: 'Grilled Paneer And Veggies With Hot Garlic Sauce', p: '159 / 229', e: '', d: 'Half / Full', t: [] },
+  ]},
+  noodles: { icon: '&#127836;', name: 'Noodles', items: [
+    { n: 'Korean Noodles', p: '159', e: '', d: 'Full', t: [] },
+    { n: 'Chilli Garlic Noodles', p: '159', e: '', d: 'Full', t: [] },
+    { n: 'Chilli Hakka Noodles', p: '159', e: '', d: 'Full', t: [] },
+    { n: 'Schezwan Noodles', p: '169', e: '', d: 'Full', t: [] },
+    { n: 'Singapore Noodles', p: '169', e: '', d: 'Full', t: [] },
+    { n: 'Paneer Hakka Noodles', p: '169', e: '', d: 'Full', t: [] },
+  ]},
+  hot: { icon: '&#9749;', name: 'Hot Beverage Combos', items: [
+    { n: 'Hot Tea', p: '35', e: '', d: '', t: [] },
+    { n: 'Hot Tea With Bun Maska', p: '59', e: '', d: '', t: [] },
+    { n: 'Hot Tea With Samosa', p: '59', e: '', d: '', t: [] },
+    { n: 'Hot Tea With Veg Puff (Patty)', p: '69', e: '', d: '', t: [] },
+    { n: 'Hot Tea With Vada Pav', p: '69', e: '', d: '', t: [] },
+    { n: 'Hot Tea With Poha', p: '89', e: '', d: '', t: [] },
+    { n: 'Hot Coffee', p: '39', e: '', d: '', t: [] },
+    { n: 'Hot Chocolate', p: '59', e: '', d: '', t: ['best'] },
+  ]},
+  mojito: { icon: '&#129380;', name: 'Mojito', items: [
+    { n: 'Surprise Mojito', p: '69', e: '', d: '', t: ['best'] },
+    { n: 'Korean Mojito', p: '69', e: '', d: '', t: ['new'] },
+    { n: 'Strawberry Mojito', p: '69', e: '', d: '', t: [] },
+    { n: 'Tangy Mango Mojito', p: '69', e: '', d: '', t: [] },
+    { n: 'Pineapple Punch Mojito', p: '69', e: '', d: '', t: [] },
+    { n: 'Mary Litchi Mojito', p: '69', e: '', d: '', t: [] },
+    { n: 'Mint Mojito', p: '69', e: '', d: '', t: [] },
+    { n: 'Orange Cinderella Mojito', p: '69', e: '', d: '', t: [] },
+    { n: 'Blue Heaven Mojito', p: '69', e: '', d: '', t: [] },
+    { n: 'Rose Petal Mojito', p: '69', e: '', d: '', t: ['must'] },
+    { n: 'Cranberry Mojito', p: '69', e: '', d: '', t: [] },
+    { n: 'Passion Mojito', p: '69', e: '', d: '', t: [] },
+    { n: 'Peach Mojito', p: '69', e: '', d: '', t: [] },
+  ]},
+  shakes: { icon: '&#129371;', name: 'Milk Shakes', items: [
+    { n: 'Oreo Chocolate Shake', p: '139', e: '+25', d: '', t: [] },
+    { n: 'Rose Delight Shake', p: '139', e: '+25', d: '', t: [] },
+    { n: 'Strawberry Shake', p: '139', e: '+25', d: '', t: [] },
+    { n: 'KitKat Chocolate Shake', p: '159', e: '+25', d: '', t: [] },
+    { n: 'Brownie Blast Shake', p: '169', e: '+25', d: '', t: ['must'] },
+  ]},
+  icetea: { icon: '&#129380;', name: 'Ice Tea', items: [
+    { n: 'Lemon Ice Tea', p: '69', e: '', d: '', t: [] },
+    { n: 'Peach Ice Tea', p: '69', e: '', d: '', t: [] },
+    { n: 'Passion Fruit Ice Tea', p: '69', e: '', d: '', t: [] },
+    { n: 'Cranberry Ice Tea', p: '69', e: '', d: '', t: [] },
+    { n: 'American Blue Ice Tea', p: '69', e: '', d: '', t: ['best'] },
+  ]},
+  dessert: { icon: '&#127854;', name: 'Desserts', items: [
+    { n: 'Sizzling Brownie', p: '219', e: '', d: '', t: ['must'] },
+    { n: 'Special Kulhad Chocolaty Mud Pie', p: '289', e: '', d: '', t: ['best'] },
+  ]},
+};
+
+const combos = [
+  { icon: '&#127828;', title: 'Classic OG Burger', items: 'Any Mojito / Ice Tea', price: '99' },
+  { icon: '&#127829;', title: 'Pizza Di Sicilia', items: 'Any Mojito / Ice Tea', price: '219' },
+  { icon: '&#129386;', title: 'Any Toastie + French Fries', items: 'Any Mojito / Ice Tea', price: '289' },
+  { icon: '&#127848;', title: 'Any Kulhad', items: 'Any Mojito / Ice Tea', price: '249' },
+  { icon: '&#129386;', title: 'Any Grilled Sandwich', items: 'Any Mojito / Ice Tea', price: '249' },
+  { icon: '&#127828;', title: 'Korean Burger + French Fries', items: 'Any Mojito / Ice Tea', price: '219' },
+  { icon: '&#129380;', title: '3 Any Mojito / Ice Tea', items: '', price: '149' },
+  { icon: '&#9749;', title: '2 Premium Cold Coffee', items: '', price: '129' },
+  { icon: '&#127829;', title: 'Any Pizza', items: 'Any Mojito / Ice Tea', price: '289' },
+];
+
+const meals = [
+  { icon: '&#127839;', title: 'French Fries', items: 'Any Mojito / Ice Tea', price: '139' },
+  { icon: '&#127838;', title: 'Garlic Bread', items: 'Any Mojito / Ice Tea', price: '159' },
+];
+
+function tagHtml(t) {
+  const cls = t === 'best' ? 'tag-b' : t === 'new' ? 'tag-n' : t === 'must' ? 'tag-m' : 'tag-v';
+  const label = t === 'best' ? 'Best Seller' : t === 'new' ? 'New Launch' : t === 'must' ? 'Must Try' : 'Veg';
+  return `<span class="tag-inline ${cls}">${label}</span>`;
+}
+
+function renderCategory(key, cat) {
+  const itemsHtml = cat.items.map(item => {
+    const tags = item.t.map(tagHtml).join('');
+    const extra = item.e ? `<span class="extra">/ &#8377;${item.e}</span>` : '';
+    const desc = item.d ? `<div class="item-desc">${item.d}</div>` : '';
+    return `
+      <div class="item-row">
+        <div class="item-info">
+          <div class="item-name">${item.n} ${tags}</div>
+          ${desc}
+        </div>
+        <div class="item-price">&#8377;${item.p}${extra}</div>
+      </div>
+    `;
+  }).join('');
+
+  return `
+    <div class="cat-section" data-cat="${key}">
+      <div class="cat-header">
+        <span class="icon">${cat.icon}</span>
+        <h2>${cat.name}</h2>
+        <div class="line"></div>
+      </div>
+      ${itemsHtml}
+    </div>
+  `;
+}
+
+function renderCombos() {
+  const comboHtml = combos.map(c => `
+    <div class="combo-item">
+      <div class="emoji">${c.icon}</div>
+      <div class="title">${c.title}</div>
+      <div class="sub">${c.items}</div>
+      <div class="price"><span>&#8377;</span>${c.price}</div>
+    </div>
+  `).join('');
+
+  const mealHtml = meals.map(m => `
+    <div class="meal-item">
+      <div class="emoji">${m.icon}</div>
+      <div class="title">${m.title}</div>
+      <div class="sub">${m.items}</div>
+      <div class="price">&#8377;${m.price}</div>
+    </div>
+  `).join('');
+
+  return `
+    <div class="cat-section" data-cat="combo">
+      <div class="cat-header">
+        <span class="icon">&#127881;</span>
+        <h2>Try Our Combos</h2>
+        <div class="line"></div>
+      </div>
+      <div class="combo-grid">${comboHtml}</div>
+
+      <div style="margin-top:40px;">
+        <div class="cat-header">
+          <span class="icon">&#127869;</span>
+          <h2>Make A Meal</h2>
+          <div class="line"></div>
+        </div>
+        <div class="meal-grid">${mealHtml}</div>
+      </div>
+
+      <p style="text-align:center; color: var(--z-muted); font-size: 13px; margin-top: 20px;">Add Rs 10/- And Get Cold Coffee Instead Of Mojito</p>
+    </div>
+  `;
+}
+
+function renderAll() {
+  const container = document.getElementById('menuContent');
+  let html = '<div class="two-col">';
+
+  const keys = Object.keys(categories);
+  const mid = Math.ceil(keys.length / 2);
+
+  html += '<div>';
+  keys.slice(0, mid).forEach(k => {
+    html += renderCategory(k, categories[k]);
+  });
+  html += '</div><div>';
+  keys.slice(mid).forEach(k => {
+    html += renderCategory(k, categories[k]);
+  });
+  html += '</div></div>';
+
+  html += renderCombos();
+  container.innerHTML = html;
+
+  requestAnimationFrame(() => {
+    document.querySelectorAll('.cat-section').forEach((el, i) => {
+      setTimeout(() => el.classList.add('visible'), i * 80);
+    });
+  });
+}
+
+function renderFilter(cat) {
+  const container = document.getElementById('menuContent');
+  if (cat === 'all') { renderAll(); return; }
+  if (cat === 'combo') {
+    container.innerHTML = renderCombos();
+    requestAnimationFrame(() => {
+      document.querySelectorAll('.cat-section').forEach(el => el.classList.add('visible'));
+    });
+    return;
+  }
+  if (categories[cat]) {
+    container.innerHTML = renderCategory(cat, categories[cat]);
+    requestAnimationFrame(() => {
+      document.querySelector('.cat-section').classList.add('visible');
+    });
+  }
+}
+
+document.querySelector('.menu-nav').addEventListener('click', (e) => {
+  if (e.target.classList.contains('nav-btn')) {
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    e.target.classList.add('active');
+    renderFilter(e.target.dataset.cat);
+  }
+});
+
+renderAll();
+</script>
+
+</body>
+</html>
